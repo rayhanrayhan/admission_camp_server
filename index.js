@@ -39,6 +39,16 @@ async function run() {
         const myCollegeCollection = client.db("admissionCamp").collection("mycollege");
         const collegeDataCollection = client.db('admissionCamp').collection('collegeData')
 
+
+        app.post('/reviews', async (req, res) => {
+            const myReview = req.body;
+            const result = await collegeReview.insertOne(myReview);
+
+            // Get all reviews after insertion
+            const reviews = await collegeReview.find().toArray();
+            res.send(reviews);
+        });
+
         // College Review
         app.get('/reviews', async (req, res) => {
             const cursor = collegeReview.find()
