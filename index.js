@@ -34,25 +34,46 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+        const collegeReview = client.db("admissionCamp").collection("reviews");
+        const collegeResearchPaper = client.db("admissionCamp").collection("researchPaper");
         const myCollegeCollection = client.db("admissionCamp").collection("mycollege");
         const collegeDataCollection = client.db('admissionCamp').collection('collegeData')
 
+        // College Review
+        app.get('/reviews', async (req, res) => {
+            const cursor = collegeReview.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        // Research paper
+        app.get('/research_paper', async (req, res) => {
+            const cursor = collegeResearchPaper.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
 
 
+
+        // College data for show all
         app.get('/collegeData', async (req, res) => {
             const cursor = collegeDataCollection.find()
             const result = await cursor.toArray()
             res.send(result)
         })
+
+        // college data show id based detailed 
+
         app.get('/collegeData/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
             const result = await collegeDataCollection.findOne(query)
             res.send(result)
         })
-        app.get('/collegeData/:email', async (req, res) => {
+
+
+        app.get('/mycollege/:email', async (req, res) => {
             const email = req.params.email
-            const query = { Email: email }
+            const query = { email: email }
             const result = await myCollegeCollection.find(query).toArray()
             res.send(result)
         })
